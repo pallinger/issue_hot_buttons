@@ -35,7 +35,7 @@
   Tracker.all.each { |tracker| trackers[tracker.id] = tracker.name }
 
   activities = {}
-  TimeEntryActivity.where('project_id IS NULL AND active = 1').each { |activity| activities[activity.id] = activity.name}
+  TimeEntryActivity.where({ project_id: nil, active: true }).each { |activity| activities[activity.id] = activity.name}
   
   projects = {}
   Project.all.each { |project|
