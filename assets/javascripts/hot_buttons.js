@@ -1134,7 +1134,8 @@ jQuery(document).ready(function() {
         buttons.each(function(element){
           hot_buttons_container.insert(element);
         });
-        $$P('div.issue').first().insert({before: hot_buttons_container});
+//        $$P('div.issue').first().insert({before: hot_buttons_container});
+        $$P('div.contextual').last().insert({top: hot_buttons_container});
       }
     }
 
