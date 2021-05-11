@@ -10,11 +10,11 @@
   i18n_strings = I18n.backend.send(:translations)
   locale = I18n.locale
   
-  #escaping issue description as script tags were breaking rendering
+#  #escaping issue description as script tags were breaking rendering
   @issue_copy = @issue.clone
-  unless @issue_copy.description.nil?
-    @issue_copy.description.gsub!(/[><]/, { '>' => '&gt;', '<' => '&lt;' })
-  end
+#  unless @issue_copy.description.nil?
+#    @issue_copy.description.gsub!(/[><]/, { '>' => '&gt;', '<' => '&lt;' })
+#  end
 %>
 <% content_for :header_tags do %>
   <%= javascript_include_tag 'prototype.js', :plugin => 'issue_hot_buttons' %>
