@@ -54,11 +54,11 @@ jQuery(document).ready(function() {
         var condition = t.config.get(condition_name);
         if (! condition) return false;
         condition = condition.evalJSON();
-        
+
         var result;
-        
+
         switch(condition_name) {
-          
+
           case 'issue_assigned_to':
           case 'issue_not_assigned_to':
             var allowed_users = [];
@@ -70,10 +70,10 @@ jQuery(document).ready(function() {
             });
             result = allowed_users.uniq().indexOf(assigned_to) > -1;
             result = 'issue_assigned_to' == condition_name
-              ? result
-              : ! result;
+                ? result
+                : ! result;
             break;
-          
+
           case 'user_role':
           case 'user_role_is_not':
             var allowed_users = [];
@@ -85,42 +85,42 @@ jQuery(document).ready(function() {
             });
             result = allowed_users.uniq().indexOf(current_user) > -1;
             result = 'user_role' == condition_name
-              ? result
-              : ! result;
+                ? result
+                : ! result;
             break;
-          
+
           case 'issue_status':
           case 'issue_status_is_not':
             var issue_status = t.issue.status_id.toString();
             result = condition.indexOf(issue_status) > -1;
             result = 'issue_status' == condition_name
-              ? result
-              : ! result;
+                ? result
+                : ! result;
             break;
-            
+
           case 'issue_tracker':
           case 'issue_tracker_is_not':
             var issue_tracker = t.issue.tracker_id.toString();
             result = condition.indexOf(issue_tracker) > -1;
             result = 'issue_tracker' == condition_name
-              ? result
-              : ! result;
+                ? result
+                : ! result;
             break;
-            
+
           case 'project':
           case 'project_is_not':
             var issue_project = t.issue.project_id.toString();
             result = condition.indexOf(issue_project) > -1;
             result = 'project' == condition_name
-              ? result
-              : ! result;
+                ? result
+                : ! result;
             break;
 
         }
-        
+
         allow = result;
       });
-      
+
       return allow;
     },
 
@@ -168,7 +168,7 @@ jQuery(document).ready(function() {
       });
       var mirrored_label = mirrored_element.select('label').first();
       mirrored_label.writeAttribute('for', tmp_id);
-      
+
 
       // Special magic for calendar inputs
       var calendar_field = mirrored_element.select('img.calendar-trigger').first();
@@ -278,7 +278,7 @@ jQuery(document).ready(function() {
       });
       return ! no_additional;
     },
-    
+
     /**
      * Check is current button suitable for current workflow settings
      *
@@ -287,7 +287,7 @@ jQuery(document).ready(function() {
     is_workflow_suitable: function() {
       var t = this;
       var suitable = true;
-      
+
       [
         'assign_to_other',
         'set_issue_status',
@@ -296,7 +296,7 @@ jQuery(document).ready(function() {
       ].each(function(option){
         var setting = t.config.get(option);
         if (! setting) return false;
-        
+
         switch(option) {
           case 'assign_to_other':
             // Check can current issue be assigned to configured user roles
@@ -312,14 +312,14 @@ jQuery(document).ready(function() {
               configures_users.each(function(user_id){
                 user_id = user_id ? user_id : '';
                 suitable = suitable
-                  && $$P('#issue_assigned_to_id option[value="' + user_id + '"]').length > 0;
+                    && $$P('#issue_assigned_to_id option[value="' + user_id + '"]').length > 0;
               });
             }
             else {
               suitable = suitable && false;
             }
             break;
-            
+
           case 'set_issue_status':
             var set_issue_status = t.config.get('set_issue_status').evalJSON().first();
             var available_statuses = [];
@@ -328,30 +328,30 @@ jQuery(document).ready(function() {
             });
             suitable = suitable && -1 < available_statuses.indexOf(set_issue_status);
             break;
-          
+
           case 'include_standart_fields':
             var default_fields = t.config.get('include_standart_fields').evalJSON();
             default_fields.each(function(field_id){
               var default_field = $P(field_id);
               suitable = suitable &&
-                (default_field && ! default_field.disabled);
+                  (default_field && ! default_field.disabled);
             });
             break;
-            
+
           case 'include_custom_fields':
             var custom_fields = t.config.get('include_custom_fields').evalJSON();
             custom_fields.each(function(field_num){
               var field_id = ['issue_custom_field_values', field_num].join('_');
               var custom_field = $P(field_id);
               suitable = suitable &&
-                (custom_field && ! custom_field.disabled);
+                  (custom_field && ! custom_field.disabled);
             });
             break;
         }
       });
 
       return suitable;
-   },
+    },
 
     /**
      * Render hot button and attach click listener
@@ -360,10 +360,10 @@ jQuery(document).ready(function() {
      */
     render_button: function() {
       var t = this;
-      
+
       //var button = new Element('button', {'class': 'action'})
       var button = new Element('button', {'class': 'action'})  //collapse_section'})
-        .insert(this.config.get('caption'));
+          .insert(this.config.get('caption'));
       button.config = this.config;
 
       if(this.has_additional_controls()) {
@@ -390,7 +390,7 @@ jQuery(document).ready(function() {
      */
     hot_button_opt_action: function(event, t) {
       var hot_button = Event.element(event);
-      
+
       hot_button.up().select('button').each(function(btn){
         btn.writeAttribute('disabled', 'disabled');
         btn.setStyle({opacity: 0.15});
@@ -399,19 +399,19 @@ jQuery(document).ready(function() {
       hot_button.setStyle({opacity: 1});
 
       var submit_button = new Element('button', {'class': 'submit'})
-        .insert(t._('submit'));
+          .insert(t._('submit'));
       submit_button.config = hot_button.config;
       Event.observe(submit_button, 'click', function(event) {
         t.hot_button_submit_action(event, t);
         t.hide_optional();
       });
-      
+
       var additional_wrapper = new Element('div', {
         'class': 'optional_wrapper'
       });
-    
+
       var optional_controls = t.get_opt_controls(hot_button.config);
-    
+
       optional_controls.each(function(element) {
         additional_wrapper.insert(element);
       });
@@ -425,7 +425,7 @@ jQuery(document).ready(function() {
       Event.observe(close_button, 'click', function(e) {
         if ($$P('#issue_hot_buttons_additional #attachments_fields').length > 0) {
           $$P('#issue-form .box fieldset').last().insert(
-            $P('attachments_fields').up()
+              $P('attachments_fields').up()
           );
         }
         t.hide_optional(e);
@@ -435,13 +435,13 @@ jQuery(document).ready(function() {
         id: 'issue_hot_buttons_additional',
         'class': 'update_issue'
       })
-        .insert(new Element('div', {'class': 'controls'}).insert(close_button))
-        .insert(additional_wrapper);
+          .insert(new Element('div', {'class': 'controls'}).insert(close_button))
+          .insert(additional_wrapper);
       $P('issue_hot_buttons').insert({after: additional_container});
-      
+
       additional_container
-        .select('textarea, input, select')
-        .first().focus();
+          .select('textarea, input, select')
+          .first().focus();
     },
 
     /**
@@ -493,7 +493,7 @@ jQuery(document).ready(function() {
             var custom_fields = button_config.get('include_custom_fields').evalJSON();
             custom_fields.each(function(custom_field_id) {
               elements.push(
-                t.get_mirrored_element(['issue_custom_field_values', custom_field_id].join('_'))
+                  t.get_mirrored_element(['issue_custom_field_values', custom_field_id].join('_'))
               );
             });
             break;
@@ -515,7 +515,7 @@ jQuery(document).ready(function() {
               elements.push(comment_element);
             }
             break;
-            
+
           case 'include_file_attachment':
             var file_attachment_block = $('attachments_fields').up();
             file_attachment_block.addClassName('attachments_wrapper');
@@ -536,7 +536,7 @@ jQuery(document).ready(function() {
     hot_button_submit_action: function(event, t){
       var button = Event.element(event);
 
-      [      
+      [
         'assign_to_other',
         'include_comment',
         'include_custom_fields',
@@ -553,14 +553,14 @@ jQuery(document).ready(function() {
             if (assign_to.length === 1 && ['current_user', 'nobody'].indexOf(assign_to[0]) > -1) {
               var user_to_reassign = t.users_per_role[assign_to[0]];
               user_to_reassign = user_to_reassign
-                ? user_to_reassign.toString()
-                : '';
-              
+                  ? user_to_reassign.toString()
+                  : '';
+
               $P('issue_assigned_to_id').value = user_to_reassign;
             }
             else {
               $P('issue_assigned_to_id').value =
-                button.up().select('select.issue_assigned_to_id').first().value;
+                  button.up().select('select.issue_assigned_to_id').first().value;
             }
             break;
 
@@ -570,7 +570,7 @@ jQuery(document).ready(function() {
               $P('issue_done_ratio').value = 100;
             }
             break;
-            
+
           case 'set_issue_status':
             var issue_status = button.config.get('set_issue_status').evalJSON();
             $P('issue_status_id').value = issue_status.first();
@@ -603,7 +603,7 @@ jQuery(document).ready(function() {
               }
             });
             break;
-            
+
           case 'include_standart_fields':
             var standart_fields = button.config.get('include_standart_fields').evalJSON();
             standart_fields.each(function(standart_field_id) {
@@ -614,15 +614,15 @@ jQuery(document).ready(function() {
               }
             });
             break;
-            
+
           case 'include_file_attachment':
             $$P('#issue-form .box fieldset').last().insert(
-              $P('attachments_fields').up()
+                $P('attachments_fields').up()
             );
             break;
         }
       });
-      
+
       // Submit issue form!
       $P('issue-form').submit();
     }
@@ -645,8 +645,8 @@ jQuery(document).ready(function() {
 
       // button is not suitable for current context
       if (this.check_conditions() && this.is_workflow_suitable()) {
-        return this.render_button();        
-      } 
+        return this.render_button();
+      }
 
       return false;
     },
@@ -659,14 +659,14 @@ jQuery(document).ready(function() {
     is_workflow_suitable: function() {
       var t = this;
       var suitable = true;
-      
+
       [
         'activity',
         'include_custom_fields'
       ].each(function(option){
         var setting = t.config.get(option);
         if (! setting) return false;
-        
+
         switch(option) {
           case 'activity':
             var activity = t.config.get('activity').evalJSON().first();
@@ -681,14 +681,14 @@ jQuery(document).ready(function() {
             custom_fields = custom_fields ? custom_fields.evalJSON() : false;
             custom_fields.each(function(custom_field_num){
               var custom_field_id =
-                ['time_entry_custom_field_values', custom_field_num].join('_');
+                  ['time_entry_custom_field_values', custom_field_num].join('_');
               var custom_field = $P(custom_field_id);
               suitable = suitable &&
-                (custom_field && ! custom_field.disabled)
+                  (custom_field && ! custom_field.disabled)
             });
             break
         }
-        
+
       });
       return suitable;
     },
@@ -700,11 +700,11 @@ jQuery(document).ready(function() {
      */
     render_button: function() {
       var t = this;
-      
+
       var start_working = new Element('button', {'class': 'action'})
-        .update(this.config.get('start'));
+          .update(this.config.get('start'));
       start_working.config = this.config;
-      
+
       Event.observe(start_working, 'click', function(event) {
         t.start_working_action(event, t);
       });
@@ -730,12 +730,12 @@ jQuery(document).ready(function() {
       ];
       var timer_prefix = hot_button.config.get('timer_prefix');
       timer_prefix && timer_ingredients.unshift(
-        new Element('span', {'class': 'prefix'}).update(timer_prefix)
+          new Element('span', {'class': 'prefix'}).update(timer_prefix)
       );
       if (include_seconds) {
         timer_ingredients.push(
-          new Element('span', {'class': 'seconds_divisor'}).update(':'),
-          new Element('span', {'class': 'seconds'}).update('00')
+            new Element('span', {'class': 'seconds_divisor'}).update(':'),
+            new Element('span', {'class': 'seconds'}).update('00')
         );
       }
       timer_ingredients.each(function(element){
@@ -748,34 +748,34 @@ jQuery(document).ready(function() {
       var pause_button = new Element('button', {
         'class': 'pause'
       })
-        .update(hot_button.config.get('pause'))
-        .observe('click', t.pause_button_action);
+          .update(hot_button.config.get('pause'))
+          .observe('click', t.pause_button_action);
 
       var resume_button = new Element('button', {
         'class': 'resume',
         'style': 'display: none;'
       })
-        .update(hot_button.config.get('resume'))
-        .observe('click', t.resume_button_action);
+          .update(hot_button.config.get('resume'))
+          .observe('click', t.resume_button_action);
 
       var stop_button = new Element('button', {
         'class': 'stop'
       })
-        .update(hot_button.config.get('stop'))
-        .observe('click', function(event) {
-          timer_label.status = 'stop';
-          t.finish_action(event, t);
-          t.hide_optional();
-        });
+          .update(hot_button.config.get('stop'))
+          .observe('click', function(event) {
+            timer_label.status = 'stop';
+            t.finish_action(event, t);
+            t.hide_optional();
+          });
       stop_button.config = hot_button.config;
 
       var timer_controls = new Element('div', {
         'class': 'timer_controls'
       })
-        .insert(timer_label)
-        .insert(pause_button)
-        .insert(resume_button)
-        .insert(stop_button);
+          .insert(timer_label)
+          .insert(pause_button)
+          .insert(resume_button)
+          .insert(stop_button);
 
       var optional_controls = new Element('div', {
         'class': 'optional_controls'
@@ -788,29 +788,29 @@ jQuery(document).ready(function() {
       var additional_wrapper = new Element('div', {
         'class': 'optional_wrapper'
       })
-        .insert(timer_controls)
-        .insert(optional_controls);
+          .insert(timer_controls)
+          .insert(optional_controls);
 
       var close_button = new Element('a', {
         'class': 'icon_close',
         href: 'javascript:void(0)'
       })
-        .observe('click', function(event) {
-          timer_label.status = 'stop';
-          document.title = timer_label.canonical_page_title;
-          t.hide_optional(event);
-        })
+          .observe('click', function(event) {
+            timer_label.status = 'stop';
+            document.title = timer_label.canonical_page_title;
+            t.hide_optional(event);
+          })
 
       var additional_container = new Element('div', {
         id: 'issue_hot_buttons_additional',
         'class': 'time_tracker'
       })
-        .insert(new Element('div', {'class': 'controls'}).insert(close_button))
-        .insert(additional_wrapper);
+          .insert(new Element('div', {'class': 'controls'}).insert(close_button))
+          .insert(additional_wrapper);
 
       $P('issue_hot_buttons').insert({after: additional_container});
     },
-    
+
     /**
      * Render optional controls
      *
@@ -840,7 +840,7 @@ jQuery(document).ready(function() {
       if (custom_fields) {
         custom_fields.each(function(custom_field_id){
           elements.push(t.get_mirrored_element(
-            ['time_entry_custom_field_values', custom_field_id].join('_')
+              ['time_entry_custom_field_values', custom_field_id].join('_')
           ));
         });
       }
@@ -857,23 +857,23 @@ jQuery(document).ready(function() {
     init_timer: function(label, t) {
       var mode = ['run', 'pause', 'stop'];
       label.canonical_page_title = document.title;
-      
+
       var timer_in_title = label.config.get('timer_in_title');
       timer_in_title = timer_in_title ? timer_in_title.evalJSON() : false;
       var title_changed = -1;
-      
+
       label.elapsed = 0;
       label.status = 'run';
-      
+
       window.onbeforeunload = function(e){
         var message = label.config.get('page_close_confirm');
         e = e || window.event;
         if (e) {
           e.returnValue = message;
-        }    
+        }
         return message;
       }
-      
+
       new PeriodicalExecuter(function(pe) {
         if (0 > mode.indexOf(label.status)) pe.stop();
         if ('stop'  === label.status) {
@@ -884,25 +884,25 @@ jQuery(document).ready(function() {
         if ('pause' === label.status) return;
 
         label.elapsed++;
-        
+
         var hours = Math.floor(label.elapsed / (60 * 60));
         var divisor_for_minutes = label.elapsed % (60 * 60);
         var minutes = Math.floor(divisor_for_minutes / 60);
         var divisor_for_seconds = divisor_for_minutes % 60;
         var seconds = Math.ceil(divisor_for_seconds);
-        
+
         var s_hours = hours < 10 ? '0'.concat(hours): hours;
         var s_minutes = minutes < 10? '0'.concat(minutes): minutes;
-        
+
         if (timer_in_title && (hours * 60 + minutes) > title_changed) {
           title_changed = hours * 60 + minutes;
-          document.title = 
-            [[s_hours, s_minutes].join(':'), label.canonical_page_title].join(' ');
+          document.title =
+              [[s_hours, s_minutes].join(':'), label.canonical_page_title].join(' ');
         }
 
         label.select('.hours').first().update(s_hours);
         label.select('.minutes').first().update(s_minutes);
-        
+
         if (label.include_seconds) {
           label.select('.seconds').first().update(seconds < 10? '0'.concat(seconds): seconds);
         }
@@ -931,7 +931,7 @@ jQuery(document).ready(function() {
       button.up().select('label.timer').first().status = 'run';
       button.hide();
     },
-       
+
     /**
      * Finish(stop) button action
      *
@@ -939,8 +939,8 @@ jQuery(document).ready(function() {
      * @param t     IssueUpdateButton context
      */
     finish_action: function(event, t){
-      var button = Event.element(event); 
-      
+      var button = Event.element(event);
+
       var timer = button.up().select('label.timer').first();
       var working_time = timer.elapsed;
       var round_interval = parseInt(t.config.get('round_interval'));
@@ -949,20 +949,20 @@ jQuery(document).ready(function() {
       var module = working_time % round_interval;
       working_time = Math.floor(working_time / round_interval) * round_interval;
       working_time += (module > 0)
-        ? round_interval
-        : 0;
-      
+          ? round_interval
+          : 0;
+
       var working_hours = (working_time / 60 / 60);
-      
+
       var post_data = {
         'time_entry[issue_id]': t.issue.id,
         'time_entry[spent_on]': t.today,
         'time_entry[hours]': working_hours,
         'authenticity_token': $$P('input[name="authenticity_token"]').first().value
       };
-      
+
       var request_url = '/time_entries'; /* ['/projects', t.project.identifier, 'time_entries/new'].join('/'); */
-      
+
       [
         'activity',
         'include_comment',
@@ -970,18 +970,18 @@ jQuery(document).ready(function() {
       ].each(function(option){
         if (! t.config.get(option)) return false;
         switch(option) {
-          
+
           case 'activity':
             var activity = t.config.get('activity').evalJSON();
-            post_data['time_entry[activity_id]'] = 
-              button.up(1).select('select.time_entry_activity_id').first().value;
+            post_data['time_entry[activity_id]'] =
+                button.up(1).select('select.time_entry_activity_id').first().value;
             break;
 
           case 'include_comment':
             var include_comment = t.config.get('include_comment').evalJSON();
             if (include_comment) {
-              post_data['time_entry[comments]'] = 
-                button.up(1).select('input.time_entry_comments').first().value;
+              post_data['time_entry[comments]'] =
+                  button.up(1).select('input.time_entry_comments').first().value;
             }
             break;
 
@@ -990,17 +990,17 @@ jQuery(document).ready(function() {
             custom_fields.each(function(id){
               var original_input = $$P('#time_entry_custom_field_values_' + id).last();
               post_data['time_entry[custom_field_values][' + id + ']'] =
-                original_input.value;
+                  original_input.value;
               var mirrored_input = button.up(1).select('.time_entry_custom_field_values_' + id).last();
               if (mirrored_input.value) {
                 post_data['time_entry[custom_field_values][' + id + ']'] =
-                  mirrored_input.value;
+                    mirrored_input.value;
               }
             });
             break;
         }
       });
-     
+
       // Submit issue form!
       new Ajax.Request(request_url, {
         method: 'post',
@@ -1012,15 +1012,15 @@ jQuery(document).ready(function() {
       });
     }
   });
-  
+
   var NextPrevIssueButton = Class.create(AbstractHotButton, {
-    
+
     initialize: function(kind) {
       if (['prev', 'next'].indexOf(kind) < 0)
         throw 'Invalid king of NextPrevIssueButton (' + kind + ')';
       this.kind = kind;
     },
-    
+
     is_workflow_suitable: function() {
       if (! this.nearby_issues) return false;
       if (this.nearby_issues.indexOf(this.issue.id) < 0) return false;
@@ -1033,7 +1033,7 @@ jQuery(document).ready(function() {
           return false;
       }
     },
-    
+
     /**
      * Hot button rendering entry point
      *
@@ -1049,25 +1049,25 @@ jQuery(document).ready(function() {
 
       return false;
     },
-    
+
     render_button: function() {
       var t = this;
       var button = new Element('button', {'class': 'action'})
-        .insert(this.config.get('caption'));
+          .insert(this.config.get('caption'));
       button.config = this.config;
       button.kind = this.kind;
-      
+
       button.observe('click', function(e){
         t.submit_action(e, t);
       });
-      
+
       return button;
     },
-    
+
     submit_action: function(e, t) {
       var button = e.element();
       var position = t.nearby_issues.indexOf(t.issue.id);
-      
+
       switch (button.kind) {
         case 'next':
           position++
@@ -1076,12 +1076,12 @@ jQuery(document).ready(function() {
           position--
           break;
       }
-      
+
       window.location.href = '/issues/' + t.nearby_issues[position];
     }
-    
+
   });
-  
+
 
   /**
    * Hot buttons initializer
@@ -1134,8 +1134,7 @@ jQuery(document).ready(function() {
         buttons.each(function(element){
           hot_buttons_container.insert(element);
         });
-//        $$P('div.issue').first().insert({before: hot_buttons_container});
-        $$P('div.contextual').last().insert({top: hot_buttons_container});
+        $$P('div.issue').first().insert({before: hot_buttons_container});
       }
     }
 
