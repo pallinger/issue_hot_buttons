@@ -1,4 +1,4 @@
-module IssueHotButtons
+#module IssueHotButtons
   module IssuesControllerPatch     
 
     def self.included(base)
@@ -50,4 +50,4 @@ module IssueHotButtons
       end
     end
   end
-end
+#end
