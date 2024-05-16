@@ -11,8 +11,9 @@ tracking working time and buttons "Next Issue" and "Previous Issue".
 
 Licensed under GNU Lesser General Public License, version 2.1
 
-compatible with Redmine 3.x
-redmine 4.2 and 5.0 compatibile version in separate branches
+Compatible with Redmine 3.x
+
+Redmine 4.2 and 5.0 compatibile version in separate branches.
 
 Install
 -------
